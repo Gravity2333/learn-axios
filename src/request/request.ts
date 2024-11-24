@@ -24,7 +24,6 @@ const config = {
 const whiteListApis = ["/download"];
 
 const request = MyAxios.create(config);
-
 /** 设置请求拦截器
  * 设置token 等等
  */

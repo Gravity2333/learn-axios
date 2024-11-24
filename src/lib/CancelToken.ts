@@ -28,7 +28,7 @@ export default class CancelToken {
         executor(cancel)
     }
 
-    subscribe(listener) {
+   subscribe = (listener)  => {
         if (this.reason) {
             return
         }
@@ -40,7 +40,7 @@ export default class CancelToken {
         }
     }
 
-    unsubscribe(listener) {
+    unsubscribe = (listener) => {
         const index = this.listeners.indexOf(listener)
 
         if (index >= 0) {

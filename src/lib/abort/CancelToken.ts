@@ -1,4 +1,4 @@
-export default class CancelToken {
+export class CancelToken {
     promise: Promise<any>
     reason: string
     listeners: ((cancelReason: string) => void)[] = []

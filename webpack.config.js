@@ -16,7 +16,7 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
     descriptionFiles: ["package.json"],
     mainFields: ["main"],
-    modules: ["./src/lib","node_modules"],
+    modules: ["./lib","../node_modules"],
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },

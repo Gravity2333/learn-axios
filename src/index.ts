@@ -1,12 +1,14 @@
 import request, { API_PREFIX } from "./request/request";
-import CancelToken from "./lib/CancelToken";
+import {AbortController,CancelToken} from './lib/MyAxios'
 
 const table = document.querySelector('#dataContainer table')
 const queryBtn = document.querySelector('#operateContainer #queryBtn')
 const cancelBtn = document.querySelector('#operateContainer #cancelBtn')
 const cleanBtn = document.querySelector('#operateContainer #cleanBtn')
+const cancelAbortConrtollerBtn = document.querySelector('#operateContainer #cancelAbortConrtollerBtn')
 const loadingSpin = document.querySelector('#dataContainer #loading')
 let source = null
+
 let abortController: AbortController = null
 function setTableData(dataSource: any[]) {
   const header = table.innerHTML?.split("</tr>")[0] + "</tr></tbody>"
@@ -32,7 +34,7 @@ function setTableData(dataSource: any[]) {
 
 const fetch = async () => {
   /** 创建cancelToken */
-  // source = CancelToken.source();
+  source = CancelToken.source();
   abortController = new AbortController();
   (loadingSpin as any).style.display = 'flex';
   const { success, data: userInfos } = await request.get<{
@@ -40,7 +42,7 @@ const fetch = async () => {
     age: number,
     score: number
   }[]>(`${API_PREFIX}/users/list`, {
-    // cancelToken: source.token
+    cancelToken: source.token,
     signal: abortController.signal
   });
   if (success) {
@@ -54,7 +56,10 @@ queryBtn.addEventListener('click', () => {
 })
 
 cancelBtn.addEventListener('click', () => {
-  // source?.cancel('ERR')
+  source?.cancel('ERR')
+})
+
+cancelAbortConrtollerBtn.addEventListener('click', () => {
   abortController?.abort()
 })
 

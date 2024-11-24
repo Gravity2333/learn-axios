@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DEMO AJAX TEST</title>
     <style>
+
+        #desc{
+            font-size: 15px;
+        }
+
         #dataContainer {
             width: 500px;
             min-height: 200px;
@@ -70,6 +75,11 @@
             cursor: pointer;
         }
 
+        #cancelAbortConrtollerBtn{
+            background-color: lightpink;
+            cursor: pointer;
+        }
+
         #cleanBtn{
             background-color: lightgreen;
             cursor: pointer;
@@ -79,6 +89,7 @@
 
 <body>
     <h2>DEMO AXIOS</h2>
+    <span id="desc">DEMO 自定义axios 以及 结合CancelToken和AbortController 取消请求</span>
     <div id="dataContainer">
         <table>
             <tr id="tableHeader">
@@ -97,7 +108,8 @@
     </div>
     <div id="operateContainer">
         <button id="queryBtn">请求数据</button>
-        <button id="cancelBtn">取消请求</button>
+        <button id="cancelBtn">取消请求 CancelToken</button>
+        <button id="cancelAbortConrtollerBtn">取消请求 AbortConrtoller</button>
         <button id="cleanBtn">清除数据</button>
     </div>
 

@@ -14,16 +14,33 @@ app.use(cors({
     credentials: true // 是否允许发送Cookie
   }))
 const userRoute = new KoaRouter({prefix:'/api/users'})
-
+function delay(t){
+    const n = +(new Date())
+    while(+(new Date()) - n <= t){}
+}
 userRoute.get('/list',(ctx,next)=>{
     console.log(ctx.headers)
+    delay(1000)
     ctx.body = [
         {name: 'why',age:18,score:100},
-        {name: 'Tom',age:18,score:100},
-        {name: 'Jack',age:18,score:100},
-        {name: 'Bill',age:18,score:100},
+        {name: 'Tom',age:22,score:23},
+        {name: 'Jack',age:23,score:32},
+        {name: 'Bill',age:43,score:13},
+        {name: 'why',age:18,score:100},
+        {name: 'Tom',age:22,score:23},
+        {name: 'Jack',age:23,score:32},
+        {name: 'Bill',age:43,score:13},
+        {name: 'why',age:18,score:100},
+        {name: 'Tom',age:22,score:23},
+        {name: 'Jack',age:23,score:32},
+        {name: 'Bill',age:43,score:13},
+        {name: 'why',age:18,score:100},
+        {name: 'Tom',age:22,score:23},
+        {name: 'Jack',age:23,score:32},
+        {name: 'Bill',age:43,score:13},
     ]
- 
+
+
 })
 
 userRoute.get('/info',(ctx,next)=>{

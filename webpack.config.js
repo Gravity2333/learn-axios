@@ -1,6 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-
+const CSSMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
 module.exports = {
   mode: "none",
   context: path.resolve(__dirname, "./"),
@@ -16,7 +16,7 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
     descriptionFiles: ["package.json"],
     mainFields: ["main"],
-    modules: ["node_modules"],
+    modules: ["./src/lib","node_modules"],
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
@@ -36,13 +36,21 @@ module.exports = {
       minify: process.env.NODE_ENV === "production",
     }),
   ],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new CSSMinimizerWebpackPlugin({
+        parallel: true
+      })
+    ]
+  },
   devServer: {
-    host: "10.0.0.9",
-    port: 8088,
+    host: "0.0.0.0",
+    port: 8888,
     proxy: [
         {
           context: ['/api'],             // 匹配的路径
-          target: 'http://10.0.0.9:9000', // 目标服务器地址
+          target: 'http://0.0.0.0:9000', // 目标服务器地址
           changeOrigin: true,            // 是否修改 Origin
         },
       ],

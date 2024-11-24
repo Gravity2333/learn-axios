@@ -1,53 +1,73 @@
-import axios, { Axios } from "axios";
-import request, { API_PREFIX } from "./request";
-import myAxios from "./request/MyAxios";
+import request, { API_PREFIX } from "./request/request";
+import CancelToken from "./lib/CancelToken";
 
-(async () => {
-  const { success, data } = await request.get<any>(`${API_PREFIX}/users/list`);
+const table = document.querySelector('#dataContainer table')
+const queryBtn = document.querySelector('#operateContainer #queryBtn')
+const cancelBtn = document.querySelector('#operateContainer #cancelBtn')
+const cleanBtn = document.querySelector('#operateContainer #cleanBtn')
+const loadingSpin = document.querySelector('#dataContainer #loading')
+let source = null
+
+// (async () => {
+//   const { success, data } = await request.get<any>(`${API_PREFIX}/users/list`, {
+//     // cancelToken: source.token as any
+//   });
+//   if (success) {
+//     // alert(data)
+//     console.log(data);
+//     dataContainer.innerHTML = JSON.stringify(data)
+//   }
+//   // console.log(await request.get(`${API_PREFIX}/users/info`));
+// })();
+
+function setTableData(dataSource: any[]) {
+  const header = table.innerHTML?.split("</tr>")[0] + "</tr></tbody>"
+  let content = ""
+  dataSource.forEach(userInfo => {
+    content += `
+    <tr>
+        <td>
+            ${userInfo.name}
+        </td>
+        <td>
+             ${userInfo.age}
+        </td>
+        <td>
+             ${userInfo.score}
+        </td>
+    </tr>
+    `
+  })
+
+  table.innerHTML = header + content
+}
+
+const fetch = async () => {
+  /** 创建cancelToken */
+  source = CancelToken.source();
+  (loadingSpin as any).style.display = 'flex';
+
+  const { success, data: userInfos } = await request.get<{
+    name: string,
+    age: number,
+    score: number
+  }[]>(`${API_PREFIX}/users/list`, {
+    cancelToken: source.token
+  });
   if (success) {
-    // alert(data)
-    console.log(data);
+    setTableData(userInfos)
   }
-  // console.log(await request.get(`${API_PREFIX}/users/info`));
-})();
+  (loadingSpin as any).style.display = 'none'
+}
 
-(async () => {
-  const myAxiosInstance = myAxios.create({});
-  myAxiosInstance.interceptors.requests.use(
-    (config) => {
-      return Promise.resolve({
-        ...config,
-        header: {
-          "Cache-Control": "no-store",
-          Authorization: `Bearer UHDIUWOPWKOPWKWPKOPWKPWKWOKPW.IUWIDWIOWJOWKDWOK.WDIUdjowijiowdjowjoW`,
-        },
-      });
-    },
-    (err) => {
-      return Promise.reject(err);
-    }
-  );
+queryBtn.addEventListener('click', () => {
+  fetch()
+})
 
-  myAxiosInstance.interceptors.response.use(
-    ({ response }) => {
-      return Promise.resolve({
-        success: true,
-        data: response,
-      });
-    },
-    ({ statusText }) => {
-      return Promise.resolve({
-        success: false,
-        message: statusText,
-      });
-    }
-  );
-  const { success, data } = await myAxiosInstance.get<{
-    success: boolean;
-    data: any;
-  }>(`${API_PREFIX}/users/list`);
-  if (success) {
-    // alert(data)
-    console.log(data);
-  }
-})();
+cancelBtn.addEventListener('click', () => {
+  source?.cancel('ERR')
+})
+
+cleanBtn.addEventListener('click', () => {
+  setTableData([])
+})

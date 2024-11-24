@@ -11,8 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@koa/router": "^13.1.0",
     "axios": "^1.7.7",
     "html-webpack-plugin": "^5.6.3",
+    "koa": "^2.15.3",
+    "koa2-cors": "^2.0.6",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.3",
     "webpack": "^5.96.1",
@@ -20,6 +23,7 @@
     "webpack-dev-server": "^5.1.0"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "css-minimizer-webpack-plugin": "^7.0.0"
   }
 }

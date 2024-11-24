@@ -58,7 +58,7 @@ request.interceptors.response.use(
     // alert(error.response.statusText);
     return Promise.resolve({
       success: false,
-      message: error.response.statusText,
+      message: error.response?.statusText,
     });
   }
 );

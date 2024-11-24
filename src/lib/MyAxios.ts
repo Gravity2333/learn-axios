@@ -1,48 +1,35 @@
 import { deepMerge } from "../utils/merge";
+import { Interceptor } from "./Interceptor";
 
-class Interceptors {
-  handler: {
-    onFulfilled: InterceptorsHandler;
-    onRejected: InterceptorsHandler;
-  }[] = [];
-  constructor() {
-    this.handler = [];
-  }
 
-  use(onFulfilled: InterceptorsHandler, onRejected: InterceptorsHandler) {
-    this.handler.push({
-      onFulfilled,
-      onRejected,
-    });
-  }
-}
 
-type MyAxiosInstance = {
-  get: <T>(url: string) => Promise<T>;
-  post: <T>(url: string) =>Promise<T>
+export type MyAxiosInstance = {
+  get: <T>(url: string, config?: Record<string, any>) => Promise<T>;
+  post: <T>(url: string, data?: any, config?: Record<string, any>) => Promise<T>
+  put: <T>(url: string, data?: any, config?: Record<string, any>) => Promise<T>
+  delete: <T>(url: string, data?: any, config?: Record<string, any>) => Promise<T>
   interceptors: {
-    requests: Interceptors;
-    response: Interceptors;
+    request: Interceptor;
+    response: Interceptor;
   };
 } & { create: (config: Record<string, any>) => MyAxiosInstance };
 
-type InterceptorsHandler = (...args: any[]) => Promise<any>;
 
 class MyAxios {
   defaults: Record<string, any> = {};
   interceptors: {
-    requests: Interceptors;
-    response: Interceptors;
+    request: Interceptor;
+    response: Interceptor;
   };
   constructor(defaultConfig: Record<string, any>) {
     this.defaults = defaultConfig;
     this.interceptors = {
-      requests: new Interceptors(),
-      response: new Interceptors(),
+      request: new Interceptor(),
+      response: new Interceptor(),
     };
   }
 
-  _request(config: Record<string, any>) {
+  _request(config: Record<string, any>, data?: any) {
     const mergedConfig = deepMerge(this.defaults, config);
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -52,17 +39,18 @@ class MyAxios {
             resolve({
               status: xhr.status,
               statusText: xhr.statusText,
-              response: JSON.parse(xhr.response),
+              data: JSON.parse(xhr.response),
             });
           } else {
             reject({
               status: xhr.status,
               statusText: xhr.statusText,
-              response: xhr.response,
+              data: xhr.response,
             });
           }
         }
       };
+      xhr.onabort = reject
       xhr.onerror = reject;
       xhr.open(
         mergedConfig.method || "get",
@@ -72,18 +60,26 @@ class MyAxios {
       Object.keys(header).forEach((headerName) => {
         xhr.setRequestHeader(headerName, header[headerName]);
       });
-
-      xhr.send();
+      /** 处理cancelToken */
+      if (config.cancelToken) {
+        config.cancelToken.subscribe((cancelReason: string) => {
+          reject(cancelReason)
+          xhr.abort()
+        })
+      }
+      xhr.send(mergedConfig.method == 'post' ? data : undefined);
     });
   }
 
-  request(config: Record<string, any> = {}) {
-    const dispatch = this._request.bind(this);
+  request(config: Record<string, any> = {}, data?: any) {
+    const dispatch = ((_config: Record<string, any> = {}) => {
+      return this._request(_config, data);
+    }).bind(this)
 
     const promises = [dispatch, undefined];
 
     /** 组合拦截器 */
-    this.interceptors.requests.handler.forEach(
+    this.interceptors.request.handler.forEach(
       ({ onFulfilled, onRejected }) => {
         promises.unshift(onRejected);
         promises.unshift(onFulfilled);
@@ -99,18 +95,27 @@ class MyAxios {
 
     // 构造调用链
     let currentPromise = Promise.resolve(config);
+
     while (promises?.length > 0) {
       currentPromise = currentPromise.then(promises.shift(), promises.shift());
     }
     return currentPromise;
   }
 
-  get<DataType>(url: string) {
-    return this.request({ method: "get", url }) as DataType;
+  get<DataType>(url: string, config: Record<string, any> = {}) {
+    return this.request({ method: "get", url, ...config }) as DataType;
   }
 
-  post<DataType>(url: string) {
-    return this.request({ method: "post", url }) as DataType;
+  post<DataType>(url: string, data: any, config: Record<string, any> = {}) {
+    return this.request({ method: "post", url, data, ...config, }) as DataType;
+  }
+
+  put<DataType>(url: string, data: any, config: Record<string, any> = {}) {
+    return this.request({ method: "put", url, data, ...config, }) as DataType;
+  }
+
+  delete<DataType>(url: string, data: any, config: Record<string, any> = {}) {
+    return this.request({ method: "delete", url, data, ...config, }) as DataType;
   }
 }
 
@@ -133,7 +138,7 @@ function createInstance(defaultConfig: Record<string, any>): MyAxiosInstance {
 }
 
 const myAxios = createInstance({
-  baseURL: "http://10.0.0.9:9000",
+  baseURL: "http://0.0.0.0:9000",
   header: {
     "Content-Type": "application/json",
   },

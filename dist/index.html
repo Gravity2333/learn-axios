@@ -1,0 +1,77 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DEMO AJAX TEST</title><style>#desc{
+            font-size: 15px;
+        }
+
+        #dataContainer {
+            width: 500px;
+            min-height: 200px;
+            max-height: 300px;
+            background-color: lightgray;
+            color: white;
+            overflow: auto;
+
+            position: relative;
+            border: 1px solid black;
+            box-sizing: border-box;
+        }
+
+        #loading {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            bottom: 0px;
+            right: 0px;
+
+            background-color: lightgray;
+            display: none;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        table {
+            width: 100%;
+            border: 1px solid white;
+            width: 100%;
+        }
+
+        table #tableHeader {
+            background-color: lightsalmon;
+            position: sticky;
+            top: 0px;
+        }
+
+        table td{
+            border: 1px solid white;
+        }
+
+        #operateContainer {
+            width: 500px;
+            background-color: lightgoldenrodyellow;
+            color: white;
+            padding: 5px;
+
+            border: 1px solid black;
+            box-sizing: border-box;
+            border-top: 0px;
+        }
+
+        #queryBtn {
+            background-color: lightblue;
+            cursor: pointer;
+        }
+
+        #cancelBtn {
+            background-color: lightcoral;
+            cursor: pointer;
+        }
+
+        #cancelAbortConrtollerBtn{
+            background-color: lightpink;
+            cursor: pointer;
+        }
+
+        #cleanBtn{
+            background-color: lightgreen;
+            cursor: pointer;
+        }</style></head><body><h2>DEMO AXIOS</h2><span id="desc">DEMO 自定义axios 以及 结合CancelToken和AbortController 取消请求</span><div id="dataContainer"><table><tr id="tableHeader"><td>姓名</td><td>年龄</td><td>分数</td></tr></table><div id="loading">loading ...</div></div><div id="operateContainer"><button id="queryBtn">请求数据</button> <button id="cancelBtn">取消请求 CancelToken</button> <button id="cancelAbortConrtollerBtn">取消请求 AbortConrtoller</button> <button id="cleanBtn">清除数据</button></div><script defer="defer" src="js/bundle-main-8e26e6bc.js"></script></body></html>

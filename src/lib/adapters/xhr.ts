@@ -39,6 +39,13 @@ export default IsXHRExist && function XHRRequest(config: Record<string, any>) {
                 xhr.abort()
             })
         }
+        /** 处理abortController */
+        if (config.signal) {
+            (config.signal as AbortSignal).addEventListener('abort', (e) => {
+                reject(e)
+                xhr.abort()
+            })
+        }
 
         xhr.send(config.method == 'post' ? config.data : undefined);
     });

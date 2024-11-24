@@ -7,19 +7,7 @@ const cancelBtn = document.querySelector('#operateContainer #cancelBtn')
 const cleanBtn = document.querySelector('#operateContainer #cleanBtn')
 const loadingSpin = document.querySelector('#dataContainer #loading')
 let source = null
-
-// (async () => {
-//   const { success, data } = await request.get<any>(`${API_PREFIX}/users/list`, {
-//     // cancelToken: source.token as any
-//   });
-//   if (success) {
-//     // alert(data)
-//     console.log(data);
-//     dataContainer.innerHTML = JSON.stringify(data)
-//   }
-//   // console.log(await request.get(`${API_PREFIX}/users/info`));
-// })();
-
+let abortController: AbortController = null
 function setTableData(dataSource: any[]) {
   const header = table.innerHTML?.split("</tr>")[0] + "</tr></tbody>"
   let content = ""
@@ -44,15 +32,16 @@ function setTableData(dataSource: any[]) {
 
 const fetch = async () => {
   /** 创建cancelToken */
-  source = CancelToken.source();
+  // source = CancelToken.source();
+  abortController = new AbortController();
   (loadingSpin as any).style.display = 'flex';
-
   const { success, data: userInfos } = await request.get<{
     name: string,
     age: number,
     score: number
   }[]>(`${API_PREFIX}/users/list`, {
-    cancelToken: source.token
+    // cancelToken: source.token
+    signal: abortController.signal
   });
   if (success) {
     setTableData(userInfos)
@@ -65,7 +54,8 @@ queryBtn.addEventListener('click', () => {
 })
 
 cancelBtn.addEventListener('click', () => {
-  source?.cancel('ERR')
+  // source?.cancel('ERR')
+  abortController?.abort()
 })
 
 cleanBtn.addEventListener('click', () => {

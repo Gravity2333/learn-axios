@@ -48,7 +48,11 @@ export function deepMerge(...objects: Record<string, any>[]): Record<string, any
           (result as any)[key] = mergedArr;
         } else if (typeof obj[key] === 'object' && obj[key] !== null) {
           // 如果值是对象，则递归合并
-          (result as any)[key] = deepMerge((result as any)[key] || {}, obj[key]);
+          if(!(result as any)[key]){
+            (result as any)[key]  = obj[key]
+          }else{
+            (result as any)[key] = deepMerge((result as any)[key] || {}, obj[key]);
+          }
         } else {
           // 如果值不是对象，直接赋值
 
@@ -57,5 +61,6 @@ export function deepMerge(...objects: Record<string, any>[]): Record<string, any
       }
     }
   }
+
   return result;
 }

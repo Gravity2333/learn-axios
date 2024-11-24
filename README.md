@@ -5,7 +5,12 @@
 ```sh
 打包: npm run build
 
+打包DEMO: npm run build:demo
+
+运行MOCK-SERVER： npm run serve
+
 运行DEMO： npm run dev
+
 ```
 
 

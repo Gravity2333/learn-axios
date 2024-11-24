@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cross-env NODE_ENV=production npx webpack",
-    "dev": "cross-env NODE_ENV=development npx webpack-dev-server --open"
+    "build": "cross-env NODE_ENV=production npx webpack --config ./config/webpack.lib.js",
+    "build:demo": "cross-env NODE_ENV=production npx webpack --config ./config/webpack.dev.js",
+    "dev": "cross-env NODE_ENV=development npx webpack-dev-server --config ./config/webpack.dev.js --open ",
+    "serve": "node ./mock/users/index.js "
   },
   "author": "",
   "license": "ISC",

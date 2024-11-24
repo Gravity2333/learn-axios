@@ -1,5 +1,5 @@
 import MyAxios from "MyAxios";
-import { MyAxiosInstance } from "../lib/MyAxios";
+import { MyAxiosInstance } from "../lib/typings";
 
 export const API_PREFIX = "/api";
 const _AUTH_TOKEN_ITEM_NAME_ = "AUTH_TOKEN_ITEM_NAME_";

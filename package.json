@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "css-minimizer-webpack-plugin": "^7.0.0"
+    "css-minimizer-webpack-plugin": "^7.0.0",
+    "terser-webpack-plugin": "^5.3.10"
   }
 }

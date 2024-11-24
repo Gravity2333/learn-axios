@@ -1,13 +1,7 @@
+import { EAdaptor } from "../typings";
 import XHRRequest from "./xhr";
 
-enum EAdaptor {
-    'XHR' = 'xhr',
-    'FETCH' = 'fetch',
-    // NODE ENV
-    "HTTP" = "http"
-}
-
-const adapterMap = {
+export  const adapterMap = {
     [EAdaptor.XHR]: XHRRequest,
     [EAdaptor.FETCH]: undefined,
     [EAdaptor.HTTP]: undefined

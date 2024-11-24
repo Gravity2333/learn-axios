@@ -3,7 +3,6 @@ const IsXHRExist = !!XMLHttpRequest
 export default IsXHRExist && function XHRRequest(config: Record<string, any>) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-
         xhr.onreadystatechange = (ev) => {
             if (xhr.readyState === 4) {
                 if (xhr.status >= 200 && xhr.status < 300) {

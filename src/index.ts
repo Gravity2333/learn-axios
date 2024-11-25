@@ -33,10 +33,15 @@ function setTableData(dataSource: any[]) {
 }
 
 const fetch = async () => {
+  (loadingSpin as any).style.display = 'flex';
   /** 创建cancelToken */
   source = CancelToken.source();
+  if(abortController&&!abortController.aborted){
+    // 取消上一次请求
+    abortController.abort()
+    abortController = null;
+  }
   abortController = new AbortController();
-  (loadingSpin as any).style.display = 'flex';
   const { success, data: userInfos } = await request.get<{
     name: string,
     age: number,
@@ -45,6 +50,7 @@ const fetch = async () => {
     cancelToken: source.token,
     signal: abortController.signal
   });
+
   if (success) {
     setTableData(userInfos)
   }

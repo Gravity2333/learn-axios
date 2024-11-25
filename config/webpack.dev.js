@@ -1,8 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CSSMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
-const TerserWebpackPlugin = require('terser-webpack-plugin');
-const { experiments } = require("webpack");
 
 // 打包DEMO
 module.exports =  {
@@ -14,12 +12,6 @@ module.exports =  {
     filename: "js/bundle-[name]-[chunkhash:8].js",
     chunkFilename: "js/chunk-[name]-[chunkhash:8].js",
     clean: true,
-    library: {
-      type: 'module'
-    },
-  },
-  experiments: {
-    outputModule: true
   },
   resolve: {
     mainFiles: ["index"],

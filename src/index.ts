@@ -1,74 +1,33 @@
-import request, { API_PREFIX } from "./request/request";
-import {AbortController,CancelToken} from './lib/MyAxios'
+import axios, { Axios } from "axios";
 
-const table = document.querySelector('#dataContainer table')
-const queryBtn = document.querySelector('#operateContainer #queryBtn')
-const cancelBtn = document.querySelector('#operateContainer #cancelBtn')
-const cleanBtn = document.querySelector('#operateContainer #cleanBtn')
-const cancelAbortConrtollerBtn = document.querySelector('#operateContainer #cancelAbortConrtollerBtn')
-const loadingSpin = document.querySelector('#dataContainer #loading')
-let source = null
+axios.defaults.baseURL = "http://127.0.0.1:9000/api";
 
-let abortController: AbortController = null
-function setTableData(dataSource: any[]) {
-  const header = table.innerHTML?.split("</tr>")[0] + "</tr></tbody>"
-  let content = ""
-  dataSource.forEach(userInfo => {
-    content += `
-    <tr>
-        <td>
-            ${userInfo.name}
-        </td>
-        <td>
-             ${userInfo.age}
-        </td>
-        <td>
-             ${userInfo.score}
-        </td>
-    </tr>
-    `
+axios
+  .get("/users/list", {
+    url: "/dasda",
+    method: "post",
   })
-
-  table.innerHTML = header + content
-}
-
-const fetch = async () => {
-  (loadingSpin as any).style.display = 'flex';
-  /** 创建cancelToken */
-  source = CancelToken.source();
-  if(abortController&&!abortController.aborted){
-    // 取消上一次请求
-    abortController.abort()
-    abortController = null;
-  }
-  abortController = new AbortController();
-  const { success, data: userInfos } = await request.get<{
-    name: string,
-    age: number,
-    score: number
-  }[]>(`${API_PREFIX}/users/list`, {
-    cancelToken: source.token,
-    signal: abortController.signal
+  .then((res) => {
+    console.log(res);
   });
 
-  if (success) {
-    setTableData(userInfos)
+axios.interceptors.request.use(
+  (config) => {
+    console.log("before success");
+    return config;
+  },
+  (err) => {
+    console.log(err);
   }
-  (loadingSpin as any).style.display = 'none'
-}
+);
 
-queryBtn.addEventListener('click', () => {
-  fetch()
+axios.interceptors.response.use((res)=>{
+  console.log(res)
+  return res
 })
 
-cancelBtn.addEventListener('click', () => {
-  source?.cancel('ERR')
-})
+console.log(axios.interceptors);
+const a = new Axios()
 
-cancelAbortConrtollerBtn.addEventListener('click', () => {
-  abortController?.abort()
-})
 
-cleanBtn.addEventListener('click', () => {
-  setTableData([])
-})
+console.dir(axios.getAdapter(['fetch','http']))

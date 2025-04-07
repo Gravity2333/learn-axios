@@ -1,33 +1,30 @@
-import axios, { Axios } from "axios";
+import axios from "axios";
 
 axios.defaults.baseURL = "http://127.0.0.1:9000/api";
+console.dir(axios);
 
-axios
-  .get("/users/list", {
-    url: "/dasda",
-    method: "post",
-  })
-  .then((res) => {
-    console.log(res);
-  });
+const abortController = new AbortController()
 
-axios.interceptors.request.use(
-  (config) => {
-    console.log("before success");
-    return config;
+
+setTimeout(() => {
+  abortController.abort()
+}, 2000);
+
+// axios({
+//   url: "/users/list",
+//   responseType: "json",
+//   signal: abortController.signal,
+// }).then((res) => {
+//   console.log("res", res);
+// }).catch(()=>{})
+
+axios({
+  method:'post',
+  url:'/users/upload-test',
+  onUploadProgress: (e)=>{
+    console.log("upld",e)
   },
-  (err) => {
-    console.log(err);
-  }
-);
-
-axios.interceptors.response.use((res)=>{
-  console.log(res)
-  return res
-})
-
-console.log(axios.interceptors);
-const a = new Axios()
-
-
-console.dir(axios.getAdapter(['fetch','http']))
+  data: 'sdhadhuais'
+}).then((res) => {
+  console.log("upload res", res);
+}).catch(()=>{})

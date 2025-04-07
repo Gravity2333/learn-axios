@@ -62,6 +62,24 @@ userRoute.get('/info',(ctx,next)=>{
        }
 })
 
+userRoute.post('/upload-test', async (ctx, next) => {
+    console.log('收到上传请求:', ctx.headers);
+  
+    // 模拟 10 秒延迟
+    function delay(t) {
+      return new Promise(resolve => setTimeout(resolve, t));
+    }
+    await delay(10000); // 等 10 秒
+  
+    ctx.body = {
+      code: 0,
+      message: '上传成功',
+      data: {
+        url: 'http://127.0.0.1:9000/uploads/test.jpg'
+      }
+    };
+  });
+
 app.use(userRoute.routes())
 
 app.listen(9000,()=>{

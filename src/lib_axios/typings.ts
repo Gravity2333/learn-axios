@@ -21,6 +21,7 @@ export interface AxiosRequestConfig {
 
   transformRequest?: TransformFn[];
   transformResponse?: TransformFn[];
+  validateStatus?: (status: any) => boolean
 }
 
 export interface AxiosResponse<T> {

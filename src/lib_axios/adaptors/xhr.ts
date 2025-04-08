@@ -19,7 +19,11 @@ const xhr: Adaptor = function <T>(config: AxiosRequestConfig) {
           headers: parseHeaders(xmlHttpRequest.getAllResponseHeaders()),
           request: xmlHttpRequest,
         };
-        if (xmlHttpRequest.status >= 200 && xmlHttpRequest.status < 400) {
+        if (
+          config.validateStatus
+            ? config.validateStatus(response.status)
+            : xmlHttpRequest.status >= 200 && xmlHttpRequest.status < 300
+        ) {
           // 接受成功
           resolve(response);
         } else {
@@ -36,7 +40,8 @@ const xhr: Adaptor = function <T>(config: AxiosRequestConfig) {
     xmlHttpRequest.onabort = reject;
     // 设置error reject
     xmlHttpRequest.onerror = reject;
-
+    /** 设置timeout */
+    xmlHttpRequest.timeout = config.timeout;
     /** 获得请求方法 */
     const method = (config.method || "get").toLocaleLowerCase();
     /** 拼接url */
@@ -53,7 +58,7 @@ const xhr: Adaptor = function <T>(config: AxiosRequestConfig) {
     /** 设置abortController */
     if (config.signal) {
       config.signal.addEventListener("abort", () => {
-        if(xmlHttpRequest.readyState !== XMLHttpRequest.DONE){
+        if (xmlHttpRequest.readyState !== XMLHttpRequest.DONE) {
           xmlHttpRequest.abort();
         }
       });

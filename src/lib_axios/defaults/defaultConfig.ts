@@ -35,6 +35,9 @@ const defaultConfig: AxiosRequestConfig = {
       return data;
     },
   ],
+  validateStatus: (status) => {
+    return status >= 200 && status < 300;
+  },
 };
 
 export default defaultConfig;
